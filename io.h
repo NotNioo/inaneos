@@ -2,17 +2,15 @@
 
 #pragma once
 
-static inline void outb(unsigned short port, unsigned char val) {
-    __asm__ volatile("outb %0, %1" :: "a"(val), "Nd"(port));
-}
+/// Sends one byte data into x86_64 I/O port cpu
+extern void outb(unsigned short port, unsigned char val);
 
-static inline unsigned char inb(unsigned short port) {
-    unsigned char ret;
-    __asm__ volatile("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
+/// Receives one byte data from x86_64 I/O port cpu
+extern unsigned char inb(unsigned short port);
 
-static inline void sti(void) { __asm__ volatile("sti"); }
-static inline void cli(void) { __asm__ volatile("cli"); }
+// Enable interrupts
+extern void sti(void);
+/// Disable interrupts
+extern void cli(void);
 
 // TODO: io_wait
