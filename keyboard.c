@@ -24,7 +24,7 @@ static void push(char c) {
 
 int getchar(void){
     while(tail==head) 
-        __asm__volatile("hlt");
+        __asm__ volatile("hlt");
     char c = buf[tail];
     tail = (tail + 1) % BUFSIZE;
     return c;
@@ -36,12 +36,12 @@ void keyboard_handler(void){
         char c = kbd_map[sc];
         if(c) push(c);
     }
-    outb(0x20, 0x20)  
+    outb(0x20, 0x20);
 }
 
-__asm__volatile((naked))
+__attribute((naked))
 void irq1_stub(void){
-    __asm__volatile(
+    __asm__ volatile(
         "pusha\n"
         "call keyboard_handler\n"
         "popa\n"

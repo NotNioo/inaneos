@@ -13,4 +13,5 @@ extern void sti(void);
 /// Disable interrupts
 extern void cli(void);
 
-// TODO: io_wait
+/// Waits briefly for an I/O operation to complete.
+extern void io_wait(void);
