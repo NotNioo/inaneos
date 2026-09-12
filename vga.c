@@ -13,6 +13,8 @@ static int col = 0;
 static unsigned char attr = 0x0F;
 static VgaColor saved_fg = VGA_COLOR_WHITE;
 static VgaColor saved_bg = VGA_COLOR_BLACK;
+static VgaColor current_fg = VGA_COLOR_WHITE;
+static VgaColor current_bg = VGA_COLOR_BLACK;
 
 /// Update the cursor based on the new position
 static void update_cursor(void) {
@@ -81,12 +83,14 @@ void term_putc(char c){
 void term_puts(const char *s){ for (; *s; s++) term_putc(*s);}
 
 void term_set_color(VgaColor fg, VgaColor bg){
+    current_fg = fg;
+    current_bg = bg;
     attr = (unsigned char)((bg << 4) | (fg & 0x0F));
 }
 
 void term_save_color() {
-    saved_fg = VGA_COLOR_WHITE;
-    saved_bg = VGA_COLOR_BLACK;
+    saved_fg = current_fg;
+    saved_bg = current_bg;
 }
 
 void term_reset_color() {
