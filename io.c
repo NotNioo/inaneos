@@ -13,3 +13,10 @@ unsigned char inb(unsigned short port)  {
 
 void sti() { __asm__ volatile("sti"); }
 void cli() { __asm__ volatile("cli"); }
+
+void io_wait() {
+    // regardless the value
+    // it will create a tiny delay to wait 
+    // the io work to be finished
+    outb(0x80, 0);
+}
