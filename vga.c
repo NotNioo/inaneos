@@ -1,5 +1,7 @@
-#include "io.h"
+// vga.c - 80x25
+
 #include "vga.h"
+#include "io.h"
 
 #define COLS 80
 #define ROWS 25
