@@ -1,20 +1,37 @@
-CFLAGS = -m32 -ffreestanding -fno-stack-protector -fno-pic -fno-pie -02 -Wall
+CROSS := $(shell command -v i686-elf-gcc 2>/dev/null)
+ifeq ($(CROSS),)
+CC := gcc
+M32 := -m32
+else
+CC := i686-elf-gcc
+M32 :=
+endif
 
-all: os.iso
+CFLAGS := $(M32) -ffreestanding -fno-pic -fno-pie -fno-stack-protector -Wall -Wextra
+LD := $(CC)
+LDFLAGS := $(M32) -nostdlib -no-pie -Wl,--no-warn-rwx-segments -T linker.ld
 
-kernel.elf: kernel.o vga.o keyboard.o shell.o
+OBJS := boot.o kernel.o vga.o keyboard.o io.o
 
-%.o: %.c io.h vga.h idt.h keyboard.h shell.h
-    gcc $(CFLAGS) -c $< $@
+all: kernel.el
+kernel.o: io.h vga.h
+vga.o: io.h vga.h
+keyboard.o: io.h keyboard.h
+io.o: io.h
 
-os.iso: kernel.elf
-    mkdir -p isodir/boot/grub
-    cp kernel.elf isodir/boot/
-    cp grub.cfg isodir/boot/grub/grub.cfg
-    grub-mkrescue -o os.iso isodir
+kernel.elf: $(OBJS) linker.ld
+	$(LD) $(LDFLAGS) -o $@ $(OBJS)
 
-run: os.iso
-    qemu-system-i386 -cdrom os.iso
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+%.o: %.S
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+run: kernel.elf
+	qemu-system-i386 -kernel kernel.elf
 
 clean:
-    rm -rf *.o kernel.elf os.iso
+	rm -f $(OBJS) kernel.elf
+
+.PHONY: all run clean
