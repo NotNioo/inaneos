@@ -23,7 +23,7 @@ static void push(char c) {
 }
 
 int getchar(void){
-    while(tail==head) 
+    while(tail==head)
         __asm__ volatile("hlt");
     char c = buf[tail];
     tail = (tail + 1) % BUFSIZE;
@@ -39,7 +39,7 @@ void keyboard_handler(void){
     outb(0x20, 0x20);
 }
 
-__attribute((naked))
+__attribute__((naked))
 void irq1_stub(void){
     __asm__ volatile(
         "pusha\n"
@@ -48,4 +48,3 @@ void irq1_stub(void){
         "iret\n"
     );
 }
-

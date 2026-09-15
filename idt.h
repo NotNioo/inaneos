@@ -1,4 +1,4 @@
 #pragma once
 
 void idt_init(void);
-void pict_init(void);
+void pic_init(void);

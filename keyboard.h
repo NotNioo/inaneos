@@ -2,4 +2,4 @@
 
 int getchar(void);
 void keyboad_handler(void);
-void irql_stub(void);
+void irq1_stub(void);

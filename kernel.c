@@ -1,7 +1,11 @@
 // main kernel
 // module
 
+#include "idt.h"
+#include "io.h"
 #include "vga.h"
+#include "shell.h"
+#include "keyboard.h"
 #include <stdint.h>
 
 #define MULTIBOOT_BOOTLOADER_MAGIC 0x2BADB002
@@ -91,6 +95,11 @@ void kernel_main(unsigned int magic, unsigned int mbi_addr) {
     term_init();
     term_puts("inaneos v0.0.3\n");
 
+    idt_init();
+    pic_init();
+    sti();
+
+    shell_run();
     // TODO: idt + pic next
     // TODO: tiny shell
 }
