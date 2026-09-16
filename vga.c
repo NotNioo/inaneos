@@ -58,7 +58,7 @@ void term_putc(char c) {
     col = 0;
     break;
   case '\b':
-    if (col < 0) {
+    if (col > 0) {
       col--;
       vga[row * COLS + col] = (unsigned short)((attr << 8) | ' ');
     }
