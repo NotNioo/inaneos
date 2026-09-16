@@ -13,9 +13,15 @@ struct gate {
 
 static struct gate idt[256];
 
+static unsigned short current_cs(void) {
+    unsigned short cs;
+    __asm__ volatile("mov %%cs, %0" : "=r"(cs));
+    return cs;
+}
+
 void idt_set_gate(int n, unsigned int handler) {
     idt[n].offset_low = handler & 0xFFFF;
-    idt[n].selector    = 0x08;      // segment kode milik GRUB
+    idt[n].selector    = current_cs();      // segment kode milik GRUB
     idt[n].zero        = 0;
     idt[n].type_attr   = 0x8E;
     idt[n].offset_high = (handler >> 16) & 0xFFFF;

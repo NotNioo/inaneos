@@ -1,4 +1,4 @@
-CFLAGS = -m32 -ffreestanding -fno-stack-protector -fno-pic -fno-pie -O2 -Wall -g -MMD -MP
+CFLAGS = -m32 -ffreestanding -fno-stack-protector -fno-pic -fno-pie -O2 -Wall -g -MMD -MP -mgeneral-regs-only
 
 OBJS = boot.o kernel.o vga.o idt.o keyboard.o shell.o
 
