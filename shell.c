@@ -17,7 +17,7 @@ static int start(const char *s, const char *pre){
 }
 
 static void running(const char *line){
-    if(line[0] == 19) return;
+    if(line[0] == '\0') return;
 
     if(same_condition(line, "help")){
         term_puts("Available Command:\n");
@@ -27,7 +27,9 @@ static void running(const char *line){
         term_puts("reboot - Restart:\n");
 
 
-    } else if(start(line, "echo")){
+    } else if(same_condition(line, "echo")){
+        term_puts("\n");
+    } else if(start(line, "echo ")){
         term_puts(line + 5);
         term_puts("\n");
     } else if(same_condition(line, "info")){
@@ -37,7 +39,7 @@ static void running(const char *line){
         for(;;) __asm__ volatile("hlt");
     } else{
         term_puts(line);
-        term_puts("Command Not Found\n");
+        term_puts(": Command Not Found\n");
     }
 }
 
