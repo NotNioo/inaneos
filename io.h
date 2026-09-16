@@ -1,17 +1,23 @@
-// io.h - port in/out helpers
 
 #pragma once
+#include <stdint.h>
 
-/// Sends one byte data into x86_64 I/O port cpu
-extern void outb(unsigned short port, unsigned char val);
+static inline void outb(unsigned short port, unsigned char val) {
+  __asm__ volatile("outb %0, %1" ::"a"(val), "Nd"(port));
+}
 
-/// Receives one byte data from x86_64 I/O port cpu
-extern unsigned char inb(unsigned short port);
+static inline unsigned char inb(unsigned short port) {
+  unsigned char ret;
+  __asm__ volatile("inb %1, %0" : "=a"(ret) : "Nd"(port));
+  return ret;
+}
 
-// Enable interrupts
-extern void sti(void);
-/// Disable interrupts
-extern void cli(void);
+static inline void sti() { __asm__ volatile("sti"); }
+static inline void cli() { __asm__ volatile("cli"); }
 
-/// Waits briefly for an I/O operation to complete.
-extern void io_wait(void);
+static inline void io_wait() {
+  // regardless the value
+  // it will create a tiny delay to wait
+  // the io work to be finished
+  __asm__ volatile("outb %%al, $0x80" : : "a"(0));
+}
