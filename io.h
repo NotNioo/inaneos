@@ -1,10 +1,9 @@
-// io.h - port in/out helpers
 
 #pragma once
 #include <stdint.h>
 
 static inline void outb(unsigned short port, unsigned char val) {
-  __asm__ volatile("outb %0, %1" : : "a"(val), "Nd"(port));
+  __asm__ volatile("outb %0, %1" ::"a"(val), "Nd"(port));
 }
 
 static inline unsigned char inb(unsigned short port) {
@@ -13,10 +12,12 @@ static inline unsigned char inb(unsigned short port) {
   return ret;
 }
 
-static inline void sti(void) { __asm__ volatile("sti"); }
+static inline void sti() { __asm__ volatile("sti"); }
+static inline void cli() { __asm__ volatile("cli"); }
 
-static inline void cli(void) { __asm__ volatile("cli"); }
-
-static inline void io_wait(void) {
-  __asm__ volatile("outb %%al, 0x80" : : "a"(0));
+static inline void io_wait() {
+  // regardless the value
+  // it will create a tiny delay to wait
+  // the io work to be finished
+  __asm__ volatile("outb %%al, $0x80" : : "a"(0));
 }
